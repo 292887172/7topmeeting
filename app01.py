@@ -57,7 +57,7 @@ def login():
         pwd = form.data['pwd']
         result = SQLHelper.fetch_all('Select name,id from user WHERE name=%s and pwd=%s', [user, pwd])
         if result:
-            session	['user_info']={'id':result[1],'name':result[0]}
+            session['user_info']={'id':result[1],'name':result[0]}
             return redirect('/index')
         else:
             form.pwd.errors.append('密码错误')
