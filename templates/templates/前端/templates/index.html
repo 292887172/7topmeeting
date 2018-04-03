@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.min.css">
+    <script src="../static/js/bootstrap-datetimepicker.min.js"></script>
+
+    <title>会议室预定系统</title>
+    <style>
+        .panel-heading {
+            height: 60px;
+        }
+
+        .title {
+            color: white;
+            font-size: 25px;
+            display: block;
+            line-height: 25px;
+            align-content: center;
+
+        }
+
+        .tb {
+            margin-top: 10px;
+        }
+
+        .tbody tr{
+            height: 60px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="title">会议室预定</div>
+        </div>
+        <div class="panel-body">
+            <!--日期选择器开始-->
+            <form class="form-inline">
+                <div class="form-group">
+                <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                    <input id="date" class="form-control" size="16" type="text" value="" readonly>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+				<input type="hidden" id="dtp_input2" value="" /><br/>
+            </div>
+                <button type="submit" class="btn btn-primary select">查询</button>
+                <a href="/login" class="btn btn-success pull-right">登录</a>
+            </form>
+            <!--日期选择器结束-->
+
+
+
+            <table class="tb table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>会议室</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                        <th>9:00-10:00</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        <tr>
+                            <td>101</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                            <td>未预定</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    //日期插件
+    $(".form_date").datetimepicker({
+        format: 'yyyy-mm-dd',//显示格式
+        todayHighlight: 1,//今天高亮
+        minView: "month",//设置只显示到月份
+        startView: 2, // 日期时间选择器打开之后首先显示的视图
+        forceParse: 0,
+        showMeridian: 1,
+        autoclose: 1, //选择后自动关闭
+        language:  'en',
+        weekStart: 1,
+        todayBtn:  1
+    });
+
+    $('.select').on('click',function () {
+       var date = $('#date').val();
+        alert(date)
+    })
+</script>
+</html>

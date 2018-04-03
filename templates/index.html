@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap-datetimepicker.min.css">
+    <script src="../static/js/bootstrap-datetimepicker.min.js"></script>
+
+    <title>会议室预定系统</title>
+    <style>
+        .panel-heading {
+            height: 60px;
+        }
+
+        .title {
+            color: white;
+            font-size: 25px;
+            display: block;
+            line-height: 25px;
+            align-content: center;
+
+        }
+
+        .tb {
+            margin-top: 10px;
+        }
+
+        tbody tr{
+            height: 60px;
+        }
+        #dt{
+            display: none;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="font-size: 20px;margin-left: 100px">
+    <strong>欢迎用户：{{user}}</strong>
+    <a href="/logout">注销</a>
+</div>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="title">会议室预定</div>
+        </div>
+        <div class="panel-body">
+            <div>
+                <h2>当前选择日期：{{dt}}</h2>
+            </div>
+            <!--日期选择器开始-->
+            <form class="form-inline" method="post" action="">
+                <input type="text" value={{dt}} name="datetime" id="dt">
+                <div class="form-group">
+                    <div class="input-group input-append date form_datetime">
+                            <input class="form-control date" id="date1" size="14" type="text" value disabled readonly name="date">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary select">查询</button>
+            </form>
+            <!--日期选择器结束-->
+
+
+
+            <table class="tb table table-bordered">
+                    <thead>
+                    <tr>
+
+                        <th>会议室</th>
+                           {% for i in time_list%}
+                            <th>{{i[1]}}</th>
+                            {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                         {% for item in room_list%}
+                        <tr>
+                            <td>{{item.1}}</td>
+                            {% for t in time_list%}
+                            <td>
+                                {% if item.0 in reseve_dict.keys()%}
+                                    {% if t.0 in reseve_dict[item.0]['time'].keys()%}
+                                    <strong title="预订人：{{reseve_dict[item.0]['time'][t.0]}}">已预订</strong>
+                                    {% else %}
+                                    <button class="ding" rid={{item.0}} tid={{t.0}}>可预订</button>
+                                    {% endif%}
+                                {% else%}
+                                <button class="ding" rid={{item.0}} tid={{t.0}}>可预订</button>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                           {% endfor %}
+
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    //日期插件
+    $(".form_datetime").datetimepicker({
+        format: 'yyyy/mm/dd',//显示格式
+        todayHighlight: 1,//今天高亮
+        minView: "month",//设置只显示到月份
+//        startView: 2, // 日期时间选择器打开之后首先显示的视图
+        startDate:new Date(),
+        forceParse: 0,
+        showMeridian: 1,
+        autoclose: 1//选择后自动关闭
+    });
+    $('.select').on('click',function () {
+       var date = $('#date1').val()
+        if (date){
+            $('#dt').val(date)
+        }
+        else {
+             $('#dt').val(new Date().toLocaleDateString())
+        }
+
+    })
+//    window.onload = function(){
+//　 $('#dt').val(new Date().toLocaleDateString())
+//　　
+//}
+    $('.ding').on('click',function () {
+        alert($('#dt').val())
+        var that=this
+        $.ajax({
+            url:'/add',
+            type:'POST',
+            data:{
+                rid:$(this).attr('rid'),
+                tid:$(this).attr('tid'),
+                date: $('#dt').val()
+            },
+            success:function (data) {
+                var data=JSON.parse(data)
+                console.log(data)
+                if (data.stude==1){
+                    alert('预定成功')
+                    $(that).parent().html('<strong title="预订人:'+data.user+'">已预订</strong>')
+                }
+                else {
+                    alert('预定失败')
+                }
+            }
+        })
+    })
+</script>
+</html>
