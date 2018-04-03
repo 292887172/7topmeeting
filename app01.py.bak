@@ -1,13 +1,13 @@
-from flask import Flask,request,render_template,session,redirect,Response
-from db_helper import SQLHelper
-import json
 import datetime
+import json
+
+from flask import Flask, request, render_template, session, redirect, Response
 from wtforms import Form
-from wtforms.fields import core
-from wtforms.fields import html5
-from wtforms.fields import simple
 from wtforms import validators
 from wtforms import widgets
+from wtforms.fields import simple
+
+from metting.db_helper import SQLHelper
 
 app=Flask(__name__,template_folder='templates')
 app.debug = True
@@ -21,6 +21,8 @@ def process_request(*args,**kwargs):
     if user:
         return None
     return redirect('/login')
+
+
 
 class LoginForm(Form):
     user = simple.StringField(
@@ -65,6 +67,14 @@ def login():
     else:
         return render_template('login.html',form=form)
 
+@app.route('/logout',methods=['GET'],endpoint='n3')
+def logout():
+    if request.method=='GET':
+        session.pop('user', None)
+        return redirect('/login')
+
+
+
 @app.route('/index',methods=['GET','POST'],endpoint='n2')
 def index():
     time = SQLHelper.fetch_all('Select id,datetime from time ', [])
@@ -96,11 +106,7 @@ def index():
         else:
             return redirect('/index')
 
-@app.route('/logout',methods=['GET'],endpoint='n3')
-def logout():
-    if request.method=='GET':
-        session.pop('user', None)
-        return redirect('/login')
+
 @app.route('/add',methods=['POST'],endpoint='n4')
 def add():
     if request.method=='POST':

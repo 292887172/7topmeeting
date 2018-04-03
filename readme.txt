@@ -1,0 +1,24 @@
+	分支管理
+		dev分支--刘武
+		yue分支--高盛月
+		syq分支--孙永强
+		wu分支--吴国胜
+	代码分配	
+		武哥			
+			静态文件
+			蓝图
+			目录
+		强哥	
+			SQL：单独文件
+			简单逻辑放上面,层级别太深
+			try
+		国胜	
+			使用form接收数据：pymysql 格式化支持字典
+			utils
+			endpoint
+			debug
+		yue	
+			<title>用户登录</title>
+			模块导入
+			session['user_info']={'id':'','name':'xxx'}
+			SQL导出文件
