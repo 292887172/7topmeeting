@@ -57,7 +57,7 @@ def login():
         pwd = form.data['pwd']
         result = SQLHelper.fetch_all('Select name,id from user WHERE name=%s and pwd=%s', [user, pwd])
         if result:
-            session['user'] = result[0]
+			session['user_info']={'id':result[1],'name':result[0]}
             return redirect('/index')
         else:
             form.pwd.errors.append('密码错误')
@@ -69,7 +69,7 @@ def login():
 def index():
     time = SQLHelper.fetch_all('Select id,datetime from time ', [])
     room = SQLHelper.fetch_all('Select id,name from room ', [])
-    user = session.get('user')[0]
+    user = session.get('user_info').get('name')
     if request.method=='GET':
         dt=datetime.datetime.today().strftime('%Y/%m/%d')
         reseve_list = SQLHelper.fetch_all('Select rid,tid,name from reseve  INNER JOIN user ON reseve.uid=user.id WHERE reseve.date=%s', [dt])
@@ -107,8 +107,8 @@ def add():
         rid=request.form.get('rid')
         tid = request.form.get('tid')
         date=request.form.get('date')
-        uid=session.get('user')[1]
-        user=session.get('user')[0]
+        uid=session.get('user_info').get('id')
+        user=session.get('user_info').get('name')
         row=SQLHelper.add('INSERT INTO reseve(rid, date, tid,uid) VALUES (%s, %s, %s,%s)',[rid,date,tid,uid])
         ret={'stude':row,'user':user}
         return Response(json.dumps(ret))
