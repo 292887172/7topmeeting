@@ -8,11 +8,14 @@ from wtforms import widgets
 from wtforms.fields import simple
 
 from metting.db_helper import SQLHelper
+from .loginandlogout import Form
 #@app.route('/add',methods=['POST'],endpoint='n4')
 mettingadd1=Blueprint('mettingadd1',__name__)
-@mettingadd1.route('/add',methods=['POST'])
+@mettingadd1.route('/add',methods=['POST'], endpoint='add')
 def add():
+    form = Form()
     if request.method=='POST':
+        info_dict = form.data
         rid=request.form.get('rid')
         tid = request.form.get('tid')
         date=request.form.get('date')

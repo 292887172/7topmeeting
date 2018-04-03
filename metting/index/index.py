@@ -10,7 +10,7 @@ from wtforms.fields import simple
 from metting.db_helper import SQLHelper
 #@app.route('/index',methods=['GET','POST'],endpoint='n2')
 index1=Blueprint('index',__name__)
-@index1.route('/index',methods=['GET','POST'])
+@index1.route('/index',methods=['GET','POST'], endpoint='index')
 def index():
     time = SQLHelper.fetch_all('Select id,datetime from time ', [])
     room = SQLHelper.fetch_all('Select id,name from room ', [])

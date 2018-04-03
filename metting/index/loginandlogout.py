@@ -33,17 +33,17 @@ class LoginForm(Form):
 
 #@app.route('/login',methods=['GET','POST'],endpoint='n1')
 loginandlogout1=Blueprint('loginandlogout1',__name__,)
-@loginandlogout1.route('/login',methods=['GET','POST'])
+@loginandlogout1.route('/login',methods=['GET','POST'], endpoint='login')
 def login():
     if request.method=='GET':
         form = LoginForm()
         return render_template('login.html',form=form)
     form = LoginForm(formdata=request.form)
     if form.validate():
-        user = form.data['user']
-        pwd = form.data['pwd']
+        info_dict = form.data
         result = SQLHelper.fetch_all('Select name,id from user WHERE name=%s and pwd=%s', [user, pwd])
         if result:
+            print(2222)
             session['user'] = result[0]
             return redirect('/index')
         else:
@@ -53,7 +53,7 @@ def login():
         return render_template('login.html',form=form)
 
 #@app.route('/logout',methods=['GET'],endpoint='n3')
-@loginandlogout1.route('/logout',methods=['GET'])
+@loginandlogout1.route('/logout',methods=['GET'], endpoint='logout')
 def logout():
     if request.method=='GET':
         session.pop('user', None)
