@@ -1,13 +1,12 @@
-from flask import Flask,request,render_template,session,redirect,Response
-from db_helper import SQLHelper
-import json
 import datetime
+import json
+
+from dbutil.db import Sqlcaozuo
+from flask import Flask,request,render_template,session,redirect,Response
 from wtforms import Form
-from wtforms.fields import core
-from wtforms.fields import html5
-from wtforms.fields import simple
 from wtforms import validators
 from wtforms import widgets
+from wtforms.fields import simple
 
 app=Flask(__name__,template_folder='templates')
 app.debug = True
@@ -17,7 +16,7 @@ app.secret_key = "asdfasdf"
 def process_request(*args,**kwargs):
     if request.path == '/login':
         return None
-    user = session.get('user')
+    user = session.get('user_info')
     if user:
         return None
     return redirect('/login')
@@ -55,9 +54,11 @@ def login():
     if form.validate():
         user = form.data['user']
         pwd = form.data['pwd']
-        result = SQLHelper.fetch_all('Select name,id from user WHERE name=%s and pwd=%s', [user, pwd])
+        result = Sqlcaozuo.user_fetch_one(user,pwd)
         if result:
-			session['user_info']={'id':result[1],'name':result[0]}
+
+            session['user_info']={'id':result[1],'name':result[0]}
+            print(session)
             return redirect('/index')
         else:
             form.pwd.errors.append('密码错误')
@@ -67,12 +68,16 @@ def login():
 
 @app.route('/index',methods=['GET','POST'],endpoint='n2')
 def index():
-    time = SQLHelper.fetch_all('Select id,datetime from time ', [])
-    room = SQLHelper.fetch_all('Select id,name from room ', [])
+    # time = SQLHelper.fetch_all('Select id,datetime from time ', [])
+    time = Sqlcaozuo.time_fetch_all()
+    # room = SQLHelper.fetch_all('Select id,name from room ', [])
+    room = Sqlcaozuo.room_fetch_all()
     user = session.get('user_info').get('name')
+    print(111,user)
     if request.method=='GET':
         dt=datetime.datetime.today().strftime('%Y/%m/%d')
-        reseve_list = SQLHelper.fetch_all('Select rid,tid,name from reseve  INNER JOIN user ON reseve.uid=user.id WHERE reseve.date=%s', [dt])
+        # reseve_list = SQLHelper.fetch_all('Select rid,tid,name from reseve  INNER JOIN user ON reseve.uid=user.id WHERE reseve.date=%s', [dt])
+        reseve_list = Sqlcaozuo.reseve_fetch_all(dt)
         reseve_dict = {}
         for item in reseve_list:
             if reseve_dict.get(item[0]):
@@ -85,7 +90,8 @@ def index():
         date=request.form.get('datetime')
         if date:
             dt=datetime.date(*map(int, date.split('/')))
-            reseve_list=SQLHelper.fetch_all('Select rid,tid,name from reseve  INNER JOIN user ON reseve.uid=user.id WHERE reseve.date=%s', [dt])
+            # reseve_list=SQLHelper.fetch_all('Select rid,tid,name from reseve  INNER JOIN user ON reseve.uid=user.id WHERE reseve.date=%s', [dt])
+            reseve_list = Sqlcaozuo.reseve_fetch_all(dt)
             reseve_dict={}
             for item in reseve_list:
                 if reseve_dict.get(item[0]):
@@ -109,7 +115,8 @@ def add():
         date=request.form.get('date')
         uid=session.get('user_info').get('id')
         user=session.get('user_info').get('name')
-        row=SQLHelper.add('INSERT INTO reseve(rid, date, tid,uid) VALUES (%s, %s, %s,%s)',[rid,date,tid,uid])
+        # row=SQLHelper.add('INSERT INTO reseve(rid, date, tid,uid) VALUES (%s, %s, %s,%s)',[rid,date,tid,uid])
+        row=Sqlcaozuo.add(rid,date,tid,uid)
         ret={'stude':row,'user':user}
         return Response(json.dumps(ret))
 
