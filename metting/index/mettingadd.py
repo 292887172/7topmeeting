@@ -10,7 +10,7 @@ from wtforms.fields import simple
 from metting.db_helper import SQLHelper
 #@app.route('/add',methods=['POST'],endpoint='n4')
 mettingadd1=Blueprint('mettingadd1',__name__)
-@mettingadd1.route('/add',methods=['POST'])
+@mettingadd1.route('/add',methods=['POST'], endpoint='add')
 def add():
     if request.method=='POST':
         rid=request.form.get('rid')

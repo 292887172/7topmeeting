@@ -1,7 +1,7 @@
 from flask import Flask,session,redirect,request
 
 app=Flask(__name__,template_folder='templates')
-app.debug = True
+app.debug = False
 app.secret_key = "asdfasdf"
 from .index.index import index1
 from .index.mettingadd import mettingadd1

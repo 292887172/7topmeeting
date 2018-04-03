@@ -32,8 +32,8 @@ class LoginForm(Form):
     )
 
 #@app.route('/login',methods=['GET','POST'],endpoint='n1')
-loginandlogout1=Blueprint('loginandlogout1',__name__,)
-@loginandlogout1.route('/login',methods=['GET','POST'])
+loginandlogout1=Blueprint('loginandlogout1',__name__)
+@loginandlogout1.route('/login',methods=['GET','POST'], endpoint='login')
 def login():
     if request.method=='GET':
         form = LoginForm()
@@ -53,7 +53,7 @@ def login():
         return render_template('login.html',form=form)
 
 #@app.route('/logout',methods=['GET'],endpoint='n3')
-@loginandlogout1.route('/logout',methods=['GET'])
+@loginandlogout1.route('/logout',methods=['GET'], endpoint='logout')
 def logout():
     if request.method=='GET':
         session.pop('user', None)
